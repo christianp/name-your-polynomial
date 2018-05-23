@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>I can name your polynomial</title>
+        <link rel="stylesheet" href="style.css">
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+        <script src="bignumber.js"></script>
+    </head>
+    <body>
+        <h1>I can name your polynomial</h1>
+        <p>Think of a polynomial \(f\) with non-negative integer coefficients (that includes the constant term!)</p>
+        <p><strong>KEEP IT SECRET!</strong></p>
+        <p>Then think of a positive whole number \(N\) which is bigger than any of your coefficients.</p>
+        <p><label for="n">\(N\):</label> <input id="n"></p>
+        <p><label for="f-of-n">\(f(N)\):</label> <input id="f-of-n"></p>
+        <button id="solve">Name my polynomial!</button>
+        <div id="output">
+            <p id="answer" class="output">Your polynomial is <span id="polynomial"><script type="math/tex"></script></span>.</p>
+            <p id="error" class="output"></p>
+        </div>
+        <script src="thing.js"></script>
+    </body>
+</html>

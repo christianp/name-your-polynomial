@@ -1,0 +1,42 @@
+html {
+  font-family: sans-serif;
+  font-size:18px;
+}
+body {
+  max-width:800px;
+  margin:0 auto;
+}
+h1 {
+  text-align: center;
+  text-decoration: underline;
+}
+
+label {
+  width: 4rem;
+  display: inline-block;
+  text-align:right;
+  padding-right: 0.5rem;
+}
+input {
+  font-size: 1rem;
+}
+
+button#solve {
+  display: block;
+  margin: 0 auto;
+  font-size: 1.5rem;
+  background: hsl(240,50%,50%);
+  color: white;
+  border: none;
+  border-radius:0.2rem;
+}
+
+#output .output {
+  display:none;
+}
+#output.answer #answer.output {
+  display: block;
+}
+#output.error #error.output {
+  display: block;
+}
