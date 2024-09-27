@@ -4,21 +4,25 @@
         <meta charset="utf-8">
         <title>I can name your polynomial</title>
         <link rel="stylesheet" href="style.css">
-        <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
-        <script src="bignumber.js"></script>
     </head>
     <body>
         <h1>I can name your polynomial</h1>
-        <p>Think of a polynomial \(f\) with non-negative integer coefficients (that includes the constant term!)</p>
+        <p>Think of a polynomial <math><mi>f</mi></math> with non-negative integer coefficients (that includes the constant term!)</p>
         <p><strong>KEEP IT SECRET!</strong></p>
-        <p>Then think of a positive whole number \(N\) which is bigger than any of your coefficients.</p>
-        <p><label for="n">\(N\):</label> <input id="n"></p>
-        <p><label for="f-of-n">\(f(N)\):</label> <input id="f-of-n"></p>
-        <button id="solve">Name my polynomial!</button>
-        <div id="output">
-            <p id="answer" class="output">Your polynomial is <span id="polynomial"><script type="math/tex"></script></span>.</p>
+        <p>Then think of a positive whole number <math><mi>N</mi></math> which is bigger than any of your coefficients.</p>
+        <form>
+            <p><label for="n"><math><mi>N</mi></math>:</label> <input name="n" id="n"></p>
+            <p><label for="f-of-n"><math><mi>f</mi><mo>&#x2061;</mo><mrow><mo>(</mo><mi>N</mi><mo>)</mo></mrow></math>:</label> <input name="f-of-n" id="f-of-n"></p>
+            <button id="solve">Name my polynomial!</button>
+        </form>
+        <output id="output">
+            <div id="answer" class="output">
+                <p>Your polynomial is </p>
+                <math id="polynomial"></math>
+                <p id="hint">How did I work it out? Try setting <math><mi>N</mi><mo>=</mo><mn id="n-hint">10</mn></math>.</p>
+            </div>
             <p id="error" class="output"></p>
-        </div>
+        </output>
         <script src="thing.js"></script>
     </body>
 </html>

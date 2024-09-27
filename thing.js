@@ -1,73 +1,83 @@
 function solve(y,n) {
-  var out = [];
-  if(!n.isInteger()) {
-      throw(new Error("Your \\(N\\) is not an integer. That's not allowed!"));
-  }
-  if(!y.isInteger()) {
-      throw(new Error("Your \\(f(N)\\) is not an integer, so one of your coefficients must not be an integer. That's not allowed!"));
-  }
-  if(y.eq(0)) {
-    return [new BigNumber(0)]
-  } else if(n.eq(1)) {
-    throw(new Error("Your \\(N\\) must be bigger than all of your coefficients. You've chosen \\(N=1\\), so every coefficient of your polynomial would have to be zero. However, the value of \\(f(N)\\) you gave contradicts that."))
-  } else if(n.lt(1)) {
-    throw(new Error("Your \\(N \\lt 1\\)! That's not allowed!"))
-  } else if(y.lte(0)) {
-    throw(new Error("One of your coefficients is \\(\\leq 0\\)! That's not allowed!"))
-  }
-  while(y.gt(0)) {
-    var m = y.mod(n);
-    out.push(m);
-    y = y.minus(m).div(n);
-    if(out.length>10) {
-      throw(new Error("Too long"))
+    var out = [];
+    if(y == 0n) {
+        return [0n]
+    } else if(n == 1n) {
+        throw(new Error("Your <math><mi>N</mi></math> must be bigger than all of your coefficients. You've chosen <math><mi>N</mi><mo>=</mo><mn>1</mn></math>, so every coefficient of your polynomial would have to be zero. However, the value of <math><mi>f</mi><mo>&#x2061;</mo><mrow><mo>(</mo><mi>N</mi><mo>)</mo></mrow></math> that you gave contradicts that."))
+    } else if(n < 1n) {
+        throw(new Error("Your <math><mi>N</mi><mo>&lt;</mo><mn>1</mn></math>! That's not allowed!"))
+    } else if(y <= 0n) {
+        throw(new Error("One of your coefficients is negative! That's not allowed!"))
+    } else if(y < n) {
+        throw(new Error("One of your coefficients is a fraction! That's not allowed!"));
     }
-  }
-  return out;
+    while(y > 0n) {
+        var m = y % n;
+        out.push(m);
+        y = (y-m)/n;
+    }
+    return out;
 }
 
 function display(coefficients) {
-  if(!coefficients.filter(function(c){return !c.isZero()}).length) {
-    // if all terms are zero
-    return '0';
-  }
-  var terms = [];
-  for(var i=0;i<coefficients.length;i++) {
-    var c = coefficients[i];
-    if(c.gt(0)) {
-      if(i==0) {
-        terms.splice(0,0,c+'');
-      } else {
-        terms.splice(0,0,(c.eq(1)?'':c+' ')+(i>0?'x'+(i>1?'^{'+i+'}':''):''));
-      }
+    if(!coefficients.filter(function(c){return c != 0n}).length) {
+        // if all terms are zero
+        return '<mn>0</mn>';
     }
-  }
-  return terms.join(' + ');
+    var terms = [];
+    for(var i=coefficients.length-1; i>=0; i--) {
+        var c = coefficients[i];
+        if(c > 0n) {
+            if(i == 0n) {
+                terms.push(`<mn>${c}</mn>`);
+            } else {
+                terms.push((c == 1n ? '' : `<mn>${c}</mn><mo>\u2062</mo>`)+(i > 0n ? i > 1n ? `<msup><mi>x</mi><mn>${i}</mn></msup>` : '<mi>x</mi>' : ''));
+            }
+        }
+    }
+    return terms.join(' <mo>+</mo> ');
 }
 
-var n_input = document.getElementById('n');
-var f_input = document.getElementById('f-of-n');
+const form = document.querySelector('form');
 var polynomial_display = document.getElementById('polynomial');
-var output_div = document.getElementById('output');
+var output_div = document.querySelector('output');
 var answer_p = document.getElementById('answer');
 var error_p = document.getElementById('error');
+var n_hint = document.getElementById('n-hint');
 
 function do_solve() {
-  var n = new BigNumber(n_input.value);
-  var f = new BigNumber(f_input.value);
-  output_div.classList.remove('answer');
-  output_div.classList.remove('error');
-  try {
-    var coefficients = solve(f,n);
-    polynomial_display.textContent = '\\('+display(coefficients)+'\\)';
-    MathJax.Hub.Queue(['Typeset',MathJax.Hub,polynomial_display]);
-    output_div.classList.add('answer');
-  } catch(e) {
-    error_p.textContent = e.message;
-    output_div.classList.add('error');
-    MathJax.Hub.Queue(['Typeset',MathJax.Hub,error_p]);
-  }
+    const fd = new FormData(form);
+    try {
+        output_div.classList.remove('answer');
+        output_div.classList.remove('error');
+        var n = BigInt(fd.get('n'));
+        var f = BigInt(fd.get('f-of-n'));
+        var coefficients = solve(f,n);
+        polynomial_display.innerHTML = display(coefficients);
+        output_div.classList.add('answer');
+
+        let biggest = coefficients[0];
+        for(let c of coefficients) {
+            biggest = c > biggest ? c : biggest;
+        }
+        let p = 1n;
+        while(p < biggest) {
+            p *= 10n;
+        }
+        if(p == n) {
+            output_div.classList.remove('show-hint');
+        } else {
+            output_div.classList.add('show-hint');
+            n_hint.textContent = p;
+        }
+
+    } catch(e) {
+        error_p.innerHTML = e.message;
+        output_div.classList.add('error');
+    }
 }
 
-var solve_button = document.getElementById('solve');
-solve_button.addEventListener('click',do_solve)
+form.addEventListener('submit', e => {
+    e.preventDefault();
+    do_solve();
+});
