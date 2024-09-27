@@ -60,7 +60,7 @@ function do_solve() {
         for(let c of coefficients) {
             biggest = c > biggest ? c : biggest;
         }
-        let p = 1n;
+        let p = 10n;
         while(p < biggest) {
             p *= 10n;
         }
